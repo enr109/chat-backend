@@ -33,6 +33,7 @@ const login = async( req, res = response ) => {
 
         res.json({
             ok: true,
+            usuario: usuarioDB,
             token,
         });
 
@@ -49,12 +50,16 @@ const login = async( req, res = response ) => {
 const renewToken = async(req, res = response) => {
     const uid = req.uid;
 
-    const usuarioDB = await Usuario.findById( uid );
+    // Generar un nuevo JWT
+    const token = await generarJWT( uid);
+
+    // Obtener el usuario por UID
+    const usuario = await Usuario.findById( uid );
 
     res.json({
         ok: true,
-        token,
-        usuarioDB
+        usuario,
+        token
     });
 }
 

@@ -1,14 +1,23 @@
 class Sockets {
     constructor( io ) {
-        this.io = io;
+        /* this.io = io; */
 
-        this.socketEvents();
+        this.socketEvents( io );
     }
 
-    socketEvents(){
-        this.io.on('connection', ( socket ) => {
+    socketEvents( io ){
+        io.on('connection', ( socket ) => {
+            console.log('cliente conectado');
             // Validar el JWT
+
+
+            socket.on('disconnet', () => {
+                console.log('cliente desconectado');
+            })
             
         })
     }
 }
+
+
+module.exports = Sockets;
