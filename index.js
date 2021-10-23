@@ -49,8 +49,8 @@ const server = app.listen( process.env.PORT, () => {
 
 const io = socketio(server);
 
-io.on('connection', () => {
+/* io.on('connection', () => {
     console.log('conectado');
-});
+}); */
 
-/* new Sockets( io ); */
+new Sockets( io );
