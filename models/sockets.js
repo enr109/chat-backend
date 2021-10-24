@@ -1,3 +1,4 @@
+const { usuarioConectado, usuarioDesconectado, getUsuarios, grabarMensaje } = require("../controllers/sockets");
 const { comprobarJWT } = require("../helpers/jwt");
 
 class Sockets {
@@ -8,7 +9,7 @@ class Sockets {
     }
 
     socketEvents( io ){
-        io.on('connection', ( socket ) => {
+        io.on('connection', async( socket ) => {
 
             const [ valido, uid ] = comprobarJWT( socket.handshake.query['x-token']  );
             /* console.log('cliente conectado'); */
@@ -20,9 +21,23 @@ class Sockets {
                 
             }
 
-            console.log('Cliente conectado', uid);
+            await usuarioConectado(uid);
+            
+            // Unir al usuario a una sala de socket.io
+            /* socket.join( uid ); */
 
-            socket.on('disconnet', () => {
+            // Escuchar cuando el cliente manda un mensaje 
+            socket.on('mensaje-personal', async(payload) =>{
+                const mensaje = await grabarMensaje(payload);
+                console.log(mensaje);
+            });
+
+            // Emitir todo los usuarios conectados
+            io.emit( 'lista-usuarios', await getUsuarios())
+
+            socket.on('disconnect', async() => {
+                await usuarioDesconectado( uid );
+                io.emit( 'lista-usuarios', await getUsuarios())
                 console.log('cliente desconectado', uid);
             })
             
