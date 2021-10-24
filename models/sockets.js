@@ -24,12 +24,13 @@ class Sockets {
             await usuarioConectado(uid);
             
             // Unir al usuario a una sala de socket.io
-            /* socket.join( uid ); */
+            socket.join( uid );
 
             // Escuchar cuando el cliente manda un mensaje 
             socket.on('mensaje-personal', async(payload) =>{
                 const mensaje = await grabarMensaje(payload);
-                console.log(mensaje);
+                io.to( payload.para).emit('mensaje-personal', mensaje);
+                io.to( payload.de).emit('mensaje-personal', mensaje);
             });
 
             // Emitir todo los usuarios conectados
