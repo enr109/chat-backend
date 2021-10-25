@@ -39,7 +39,7 @@ class Sockets {
             socket.on('disconnect', async() => {
                 await usuarioDesconectado( uid );
                 io.emit( 'lista-usuarios', await getUsuarios())
-                console.log('cliente desconectado', uid);
+                
             })
             
         })

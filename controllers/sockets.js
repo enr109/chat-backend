@@ -29,8 +29,13 @@ const grabarMensaje = async( payload) => {
 
     try {
         const mensaje = new Mensaje(payload);
-        await mensaje.save();
+        const { de ,para } = await mensaje.save();
+        const imagenpara = await Usuario.findById(para);
+        const imagende = await Usuario.findById(de);
+        mensaje.para = imagenpara;
+        mensaje.de = imagende;
         return mensaje;
+        
     } catch (error) {
         console.log(error);
         return false;
